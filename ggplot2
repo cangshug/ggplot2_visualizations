@@ -1,0 +1,126 @@
+
+--------------------------- stacked bar chart ---------------------------------------------------------------------------------------
+
+chart_1 <- df %>%
+           ggplot(aes(fill= factor(type, levels = c("TypeA","TypeB")) ,y=round(price, digits = 0), x=month)) + 
+                      
+                      geom_bar(position = "stack", stat = "identity") + 
+                      
+                      labs(title = "Chart Title") +
+                      
+                      theme(plot.title = element_text(color = 1, size = 16, face = "bold",hjust = 0.5),
+                            panel.background = element_rect(fill = "white"),
+                            legend.position = "bottom",
+                            legend.title = element_text(size = 14),
+                            legend.text = element_text(size= 14),
+                            axis.text.x = element_text(colour = "black"),
+                            axis.text.y = element_text(colour = "black")) +
+                      
+                      labs(fill="")+ xlab("") + ylab("") +
+                      
+                      geom_text(aes(label =format(stat(y), big.mark=","), group = month), 
+                                    stat ='summary', fun=sum, vjust=-0.5, 
+                                    size =3, color = 1, fontface="bold") +
+                                    
+                      scale_y_continuous(labels=scales::dollar_format()) +
+                      
+                      scale_fill_manual(values = c( "dodgerblue3","darkorange2")) +
+                      
+                      scale_x_date(date_labels="%m/%d",date_breaks  ="month", expand = c(0,0))
+                      
+                      
+---------------------- bar chart with Line & point ----------------------------------------------------------------------------------------------------
+
+chart <- df %>% 
+         
+         ggplot(aes( x = date, y = sum_of_volumn)) +
+         
+         geom_bar(stat = "identity", colour = "dodgerblue3", fill = 'dodgerblue3') +
+         
+         geom_point( aes( y = percentage*400000, group = "date"),size = 3.5, color = "darkorange2") +
+         
+         geom_line( aes( y = percentage*400000, group ="date", color = "Assign any name to use as color"), size = 1.75) +
+         
+         geom_label_repel( aes ( y = percentage*400000, label = percentage), 
+                                 stat = "identity", fontface = "bold", label.size = NA, fill = NA,
+                                 size = 4, vjust = 1) +
+         
+         theme (panel.background = element_rect(fill = "white"),
+                axis.text.x = element_text(colour = "black"),
+                axis.text.y = element_text(colour = "black"),
+                legend.position = "bottom",
+                plot.title = element_text(color = 1, size = 16, face = "bold",hjust = 0.5),
+                legend.text=element_text(size=14)) +
+         
+         xlab("") + ylab("") +
+         
+         labs(title = "Chart Title") +
+         
+         scale_y_continuous( labels = scales::dollar_format(),
+                             sec.axis = sec_axis(~.*0.0000025, labels = scales::percent_format())) +
+         
+         scale_x_date( date_labels ="%m/%d", date_breaks = "1 week", expand = c(0,0)) +
+         
+         scale_colour_manual(name = "", 
+                             values = c("Assign any name to use as color" = "darkorange2", 
+                                        "sum_of_volumn" = "dodgerblue3")) 
+                                        
+                                        
+                                        
+ ------------------------------ line chart ------------------------------------------------------------------------------
+ 
+ 
+chart <- df %>% 
+         
+         ggplot ( aes ( x = Date)) +
+         
+         geom_line( aes( y = actual, group = "Date", color = "Actual"), size = 1.5) +
+         
+         geom_line( aes( y = forecast, group = "Date", color = "Forecast"), size = 1.5) +
+         
+         xlab ("") + ylab ("") +
+         
+         theme ( plot.title = element_text ( colour = 1, size = 16, face = "bold",hjust = 0.5),
+                 panel.background = element_rect ( fill = "white"),
+                 legend.position = "bottom",
+                 legend.title = element_text ( size = 10),
+                 legend.text = element_text  ( size= 10),
+                 legend.background = element_blank(),
+                 axis.text.x = element_text ( colour = "black"),
+                 axis.text.y = element_text ( colour = "black")) +
+         
+         labs ( title = "Chart Title") +
+                     
+         scale_y_continuous(labels = scales::dollar_format()) +
+                     
+         scale_colour_manual ( name = "", values = c("Forecast" = "darkorange2", "Actual" = "dodgerblue3")) +
+                     
+         scale_x_date(date_labels="%d",date_breaks  ="1 day", expand = c(0, 0)) +
+                     
+         geom_label_repel( aes( y = Actual, label = ifelse( Date == format(Sys.Date()-1,"%Y-%m-%d"), 
+                                                            format(round(Total,0), 
+                                                            big.mark = ","), "" )), 
+                                            label.size = NA, 
+                                            fill = "white", 
+                                            colour = "dodgerblue3", 
+                                            nudge_x = 1.25 , 
+                                            nudge_y = 5, 
+                                            fontface = "bold") +
+         
+         geom_label_repel( aes( y = Forecast, label = ifelse( Date == format(Sys.Date()-1,"%Y-%m-%d"), 
+                                                      format(round(Total,0), 
+                                                      big.mark = ","), "" )),
+                                              label.size = NA, 
+                                              fill = "white", 
+                                              colour = "darkorange2", 
+                                              nudge_x = -1.25 , 
+                                              nudge_y = -5, 
+                                              fontface = "bold") +
+         
+         theme(legend.position="none")
+         
+         
+         
+         
+         
+         
